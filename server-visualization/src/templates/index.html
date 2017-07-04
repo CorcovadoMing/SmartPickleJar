@@ -1,0 +1,29 @@
+<!doctype html>
+<head>
+    <title>Flask</title>
+</head>
+<body>
+    <h1>Device: DEV01</h1>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <div id="data_tem"></div>
+    <div id="data_hum"></div>
+    <div id="data_pre"></div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        
+        window.setInterval( function() { 
+            socket.emit('update_data', { 'data' : ''});
+        }, 5000);
+        socket.emit('update_data', { 'data' : ''});
+        
+        socket.on('get_data', function(msg) {
+            document.getElementById("data_tem").innerHTML = msg.data_tem;
+            eval(msg.script_tem);
+            document.getElementById("data_hum").innerHTML = msg.data_hum;
+            eval(msg.script_hum);
+            document.getElementById("data_pre").innerHTML = msg.data_pre;
+            eval(msg.script_pre); // I know .. just for prototyping
+        });
+    </script>
+</body>
